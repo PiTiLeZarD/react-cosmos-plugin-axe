@@ -1,3 +1,4 @@
+import axe from "@axe-core/react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { createPlugin } from "react-plugin";
@@ -28,9 +29,7 @@ const useAxe = (context, fixtureId, devServerOn) => {
         if (!devServerOn) return onError("Static exports cannot access source files.");
 
         try {
-            import("@axe-core/react").then((axe) => {
-                axe(React, ReactDOM, 1000);
-            });
+            axe(React, ReactDOM, 1000);
         } catch (error) {
             onError(error.message);
         }

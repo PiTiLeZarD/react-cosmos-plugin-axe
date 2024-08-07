@@ -2,24 +2,33 @@
     "name": "react-cosmos-plugin-axe",
     "version": "1.0.0",
     "description": "ReactCosmos plugin for accessibility",
-    "type": "commonjs",
     "source": "src/index.jsx",
-    "main": "dist/ui.js",
+    "main": "cosmos.plugin.json",
+    "ui": "dist/ui.js",
+    "targets": {
+        "ui": {
+            "outputFormat": "esmodule"
+        },
+        "main": false
+    },
     "author": "",
     "license": "MIT",
     "dependencies": {
         "@axe-core/react": "^4.9.1"
     },
     "devDependencies": {
-        "parcel": "^2.12.0"
+        "parcel": "^2.12.0",
+        "process": "^0.11.10"
     },
     "peerDependencies": {
-        "react-cosmos-ui": "^6.1.1",
-        "react-plugin": "^3.0.0-alpha.4",
+        "styled-components": "^6.1.12",
         "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "react-cosmos-ui": "^6.1.1",
+        "react-dom": "^18.3.1",
+        "react-plugin": "^3.0.0-alpha.4"
     },
     "scripts": {
-        "build": "parcel build"
+        "prebuild": "rm -Rf .parcel-cache dist",
+        "build": "parcel build --target ui"
     }
 }
