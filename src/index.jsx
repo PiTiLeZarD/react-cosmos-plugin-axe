@@ -4,24 +4,36 @@ import ReactDOM from "react-dom";
 import { createPlugin } from "react-plugin";
 import { AxeButton } from "./AxeButton";
 
-const { namedPlug, register } = createPlugin({
-    name: "axe",
+const PLUGIN_NAME = "axePlugin";
+
+const { namedPlug, register, onLoad } = createPlugin({ name: PLUGIN_NAME });
+
+onLoad((context) => {
+    console.info(`Plugin ${PLUGIN_NAME} loaded`, context);
 });
 
-namedPlug("rendererAction", "axe", ({ pluginContext, slotProps }) => {
+namedPlug("rendererAction", PLUGIN_NAME, ({ pluginContext, slotProps }) => {
+    console.log("rendererAction", pluginContext, slotProps);
     const { getMethodsOf } = pluginContext;
     const core = getMethodsOf("core");
     const devServerOn = core.isDevServerOn();
     const onAxe = useAxe(pluginContext, slotProps.fixtureId, devServerOn);
 
     useEffect(() => {
-        return core.registerCommands({ axe: onAxe });
+        console.log("effect");
+        return core.registerCommands({ [PLUGIN_NAME]: onAxe });
     }, [core, onAxe]);
 
     if (!devServerOn) return null;
     return <AxeButton onClick={onAxe} />;
 });
+
 export { register };
+
+if (process.env.NODE_ENV !== "test") {
+    console.info(`Register plugin ${PLUGIN_NAME}`);
+    register();
+}
 
 const useAxe = (context, fixtureId, devServerOn) => {
     const onError = useErrorNotification(context);
@@ -36,18 +48,18 @@ const useAxe = (context, fixtureId, devServerOn) => {
     }, [fixtureId.path, onError, devServerOn]);
 };
 
-function useErrorNotification(context) {
+const useErrorNotification = (context) => {
     const { getMethodsOf } = context;
     const notifications = getMethodsOf("notifications");
     const { pushTimedNotification } = notifications;
     return useCallback(
         (info) =>
             pushTimedNotification({
-                id: "axe",
+                id: PLUGIN_NAME,
                 type: "error",
-                title: "Failed to axe properly",
+                title: "Can't even axe!",
                 info,
             }),
         [pushTimedNotification]
     );
-}
+};
