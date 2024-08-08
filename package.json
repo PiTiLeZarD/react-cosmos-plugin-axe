@@ -7,7 +7,14 @@
     "ui": "dist/ui.js",
     "targets": {
         "ui": {
-            "outputFormat": "esmodule"
+            "outputFormat": "esmodule",
+            "includeNodeModules": {
+                "styled-components": false,
+                "react": false,
+                "react-cosmos-ui": false,
+                "react-dom": false,
+                "react-plugin": false
+            }
         },
         "main": false
     },
